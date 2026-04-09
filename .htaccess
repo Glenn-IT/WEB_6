@@ -1,0 +1,15 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ---------------------------------------------------------------
+    # LOCALHOST: Keep this as /WEB_6/ when running on localhost/WEB_6
+    # PRODUCTION: Change to / when uploading to live server (root domain)
+    # ---------------------------------------------------------------
+    RewriteBase /WEB_6/
+
+    # Redirect all requests to index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ index.php [QSA,L]
+
+</IfModule>

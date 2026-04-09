@@ -1,0 +1,101 @@
+/* Cancel Appointment Button Styles */
+.cancel-appointment-btn {
+  background-color: #ffc107;
+  border-color: #ffc107;
+  color: #212529;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.cancel-appointment-btn:hover {
+  background-color: #e0a800;
+  border-color: #d39e00;
+  color: #212529;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.cancel-appointment-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Status Badge Styles */
+.badge {
+  font-size: 0.75em;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.375rem;
+}
+
+.bg-warning {
+  background-color: #ffc107 !important;
+}
+
+.bg-success {
+  background-color: #198754 !important;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+.bg-secondary {
+  background-color: #6c757d !important;
+}
+
+.bg-light {
+  background-color: #f8f9fa !important;
+}
+
+/* Table improvements for appointment list */
+.orders-table {
+  margin-top: 1rem;
+}
+
+.orders-table td {
+  vertical-align: middle;
+  padding: 0.75rem;
+}
+
+.orders-table .btn {
+  margin-right: 0.25rem;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .cancel-appointment-btn {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+  }
+
+  .cancel-appointment-btn .fa {
+    margin-right: 0.25rem;
+  }
+}
+
+/* Loading state for cancel button */
+.cancel-appointment-btn.loading {
+  position: relative;
+  color: transparent;
+}
+
+.cancel-appointment-btn.loading::after {
+  content: "";
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid #212529;
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

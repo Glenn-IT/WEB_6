@@ -1,0 +1,26 @@
+# Session files
+/sessions/
+/sessions/*
+
+# Environment files
+.env
+
+# Vendor directory
+/vendor/
+
+# Upload files
+/uploads/*
+!/uploads/.gitkeep
+
+# Temporary files
+*.tmp
+*.log
+
+# IDE files
+.vscode/
+.idea/
+*.sublime-*
+
+# OS files
+.DS_Store
+Thumbs.db
