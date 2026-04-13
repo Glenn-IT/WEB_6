@@ -91,7 +91,8 @@ if (!isset($developers))      $developers      = [];
                    style="max-height:380px;width:100%;object-fit:cover;"
                    alt="<?= htmlspecialchars($team_photo['caption'] ?? 'Our Team') ?>">
               <?php if (!empty($team_photo['caption'])): ?>
-              <p class="text-muted mt-3 fst-italic"><?= htmlspecialchars($team_photo['caption']) ?></p>
+              <h2 class="section-title mt-4"><?= htmlspecialchars($team_photo['caption']) ?></h2>
+              <div class="title-underline mx-auto" style="width:60px;height:3px;background:linear-gradient(135deg,#c8956c,#e8b89a);border-radius:2px;margin-top:0.75rem;"></div>
               <?php endif; ?>
             </div>
           </div>
@@ -288,7 +289,7 @@ if (!isset($developers))      $developers      = [];
                 <div class="developer-card bg-white p-4 rounded shadow-sm h-100">
                   <div class="developer-info text-center">
                     <div class="developer-avatar mb-3">
-                      <img src="<?php echo isset($developer['name']) && $developer['name'] === 'Maricris Gaducio' ? '/devImage/Gaducio.jpg' : '/devImage/Managan.jpg'; ?>" 
+                      <img src="<?php echo isset($developer['name']) && $developer['name'] === 'Maricris Gaducio' ? $_ENV['URL_HOST'].'devImage/Gaducio.jpg' : $_ENV['URL_HOST'].'devImage/Managan.jpg'; ?>" 
                            alt="Developer Avatar" 
                            class="rounded-circle d-flex align-items-center justify-content-center mx-auto" 
                            style="width: 80px; height: 80px; object-fit: cover;">
