@@ -71,12 +71,7 @@
                         </tr>
                         <?php
                             }
-                        } else {
-                        ?>
-                        <tr>
-                            <td colspan="6">NO RECORD FOUND!</td>
-                        </tr>
-                        <?php } ?>
+                        } ?>
                     </tbody>
                 </table>
             </div>
