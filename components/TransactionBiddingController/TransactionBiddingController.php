@@ -28,7 +28,10 @@ class TransactionBiddingController {
         DATE_FORMAT(o.`time`, '%h:%i %p') AS format_time,    
         o.val_stattus as val_status, o.no_ofhead , ifnull(t.`name`, 'Any Professional') therapistname  
         ,CONCAT(u.account_first_name, ' ', u.account_last_name) AS full_name,
-        u.billing_address,
+        o.service_type,
+        o.billing_address,
+        o.hotel_name,
+        o.hotel_room,
         u.contact_no,
         u.gender
         FROM main_order o 
@@ -61,7 +64,10 @@ class TransactionBiddingController {
         DATE_FORMAT(o.`time`, '%h:%i %p') AS format_time,    
         o.val_stattus as val_status, o.no_ofhead , ifnull(t.`name`, 'Any Professional') therapistname  
         ,CONCAT(u.account_first_name, ' ', u.account_last_name) AS full_name,
-        u.billing_address,
+        o.service_type,
+        o.billing_address,
+        o.hotel_name,
+        o.hotel_room,
         u.contact_no,
         u.gender
         FROM main_order o 
