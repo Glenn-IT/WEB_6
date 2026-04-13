@@ -260,6 +260,27 @@ function sideBarDetails() {
                     'child' => []
                 ],
 
+                "banner" =>    [
+                    "Title" => 'Banner',
+                    "Description" => "Manage Homepage Banners",
+                    "icon" => 'image',
+                    'child' => []
+                ],
+
+                "promo" =>    [
+                    "Title" => 'Promos',
+                    "Description" => "Manage Promotions",
+                    "icon" => 'tag',
+                    'child' => []
+                ],
+
+                "about" =>    [
+                    "Title" => 'About Page',
+                    "Description" => "Manage About Us Content",
+                    "icon" => 'info-alt',
+                    'child' => []
+                ],
+
             
                 "user-management" =>    [
                     "Title" => 'User Management',
