@@ -1,6 +1,16 @@
 const module = `${URL_BASED}component/therapist/`;
 const component = `component/therapist/`;
 
+$(document).ready(function () {
+  if ($.fn.DataTable.isDataTable("#maintable")) {
+    $("#maintable").DataTable().destroy();
+  }
+  $("#maintable").DataTable({
+    language: { emptyTable: "NO RECORD FOUND!" },
+    columnDefs: [{ orderable: false, targets: [1, 5] }] // Photo col 1, Action col 5
+  });
+});
+
 // Handle form submission with validation
 $(document).on("submit", ".modalOpenCustom form", function (e) {
   e.preventDefault();
