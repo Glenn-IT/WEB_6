@@ -36,7 +36,10 @@ class TransactionOrderController {
                 m.type_of_payment,
                 m.billing_address,
                 m.main_order_id,
-                m.val_stattus 
+                m.val_stattus,
+                m.service_type,
+                m.hotel_name,
+                m.hotel_room
             FROM
                 orders o
             INNER JOIN items t ON

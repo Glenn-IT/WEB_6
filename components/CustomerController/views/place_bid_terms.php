@@ -342,7 +342,9 @@
     <!-- Step 3 -->
     <div class="step">
       <h2>Client Information</h2>
-      
+
+      <!-- Hidden service type passed from the picker -->
+      <input type="hidden" name="service_type" id="service_type_field" value="walk-in">
 
       <div class="row">
         <div class="col-md-6">
@@ -365,25 +367,68 @@
         </div>
         <div class="col-md-12">
           <div class="form-floating my-3">
-            <input type="email" class="form-control" id="email"  placeholder="Email Address" value="<?=$_SESSION["email"]?>" readonly>
+            <input type="email" class="form-control" id="email" placeholder="Email Address" value="<?=$_SESSION["email"]?>" readonly>
             <label for="email">Email Address</label>
           </div>
         </div>
         <div class="col-md-12">
           <div class="form-floating my-3">
-            <input type="contact_no" class="form-control"  value="<?=$_SESSION["contact_no"]?>" readonly>
+            <input type="text" class="form-control" value="<?=$_SESSION["contact_no"]?>" readonly>
             <label for="contact_no">Contact NO.</label>
           </div>
         </div>
-
         <div class="col-md-12">
           <div class="form-floating my-3">
-            <input type="gender" class="form-control" id="gender"  value="<?=$_SESSION["gender"]?>" readonly>
+            <input type="text" class="form-control" id="gender" value="<?=$_SESSION["gender"]?>" readonly>
             <label for="gender">Gender</label>
           </div>
         </div>
-        
       </div>
+
+      <!-- ===== HOME SERVICE FIELDS ===== -->
+      <div id="home-service-fields" style="display:none;">
+        <div class="alert alert-info" style="border-left:4px solid #c8956c;background:#fff8f4;border-color:#c8956c;">
+          <i class="fa fa-home" style="color:#c8956c;"></i>
+          <strong style="color:#c8956c;"> Home Service</strong> — Please provide your home address below.
+        </div>
+        <div class="form-floating my-3">
+          <input type="text" class="form-control" id="billing_address" name="billing_address"
+                 placeholder="Complete Home Address">
+          <label for="billing_address">Complete Home Address <span class="text-danger">*</span></label>
+        </div>
+      </div>
+
+      <!-- ===== HOTEL SERVICE FIELDS ===== -->
+      <div id="hotel-service-fields" style="display:none;">
+        <div class="alert alert-info" style="border-left:4px solid #c8956c;background:#fff8f4;border-color:#c8956c;">
+          <i class="fa fa-building" style="color:#c8956c;"></i>
+          <strong style="color:#c8956c;"> Hotel Service</strong> — Please fill in your hotel details below.
+        </div>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-floating my-3">
+              <input type="text" class="form-control" id="hotel_name" name="hotel_name"
+                     placeholder="Hotel Name">
+              <label for="hotel_name">Hotel Name <span class="text-danger">*</span></label>
+            </div>
+          </div>
+          <div class="col-md-8">
+            <div class="form-floating my-3">
+              <input type="text" class="form-control" id="hotel_address" name="billing_address"
+                     placeholder="Hotel Address">
+              <label for="hotel_address">Hotel Address <span class="text-danger">*</span></label>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="form-floating my-3">
+              <input type="text" class="form-control" id="hotel_room" name="hotel_room"
+                     placeholder="Room No.">
+              <label for="hotel_room">Room Number <span class="text-danger">*</span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
 
 
@@ -414,15 +459,29 @@
             <label for="schedule_date">Schedule Date</label>
           </div>
         </div>
-           <div class="col-md-6">
+        <div class="col-md-6">
           <div class="form-floating my-3">
             <input type="text" class="form-control" id="schedule_time" disabled>
             <label for="schedule_time">Time</label>
           </div>
         </div>
+        <!-- Service type summary row -->
         <div class="col-md-12">
           <div class="form-floating my-3">
-            <input type="Therapist_name" class="form-control" id="Therapist_name"  readonly>
+            <input type="text" class="form-control" id="confirm_service_type" readonly>
+            <label for="confirm_service_type">Service Type</label>
+          </div>
+        </div>
+        <!-- Address summary (shown for home/hotel) -->
+        <div class="col-md-12" id="confirm_address_row" style="display:none;">
+          <div class="form-floating my-3">
+            <input type="text" class="form-control" id="confirm_address" readonly>
+            <label for="confirm_address">Address / Location</label>
+          </div>
+        </div>
+        <div class="col-md-12">
+          <div class="form-floating my-3">
+            <input type="text" class="form-control" id="Therapist_name" readonly>
             <label for="Therapist_name">Therapist Name</label>
           </div>
         </div>
@@ -603,6 +662,26 @@
         }
       }
       
+      // Special validation for step 3 (Client Information) - service type address
+      if (currentStep === 2) {
+        var stype = document.getElementById('service_type_field') ? document.getElementById('service_type_field').value : 'walk-in';
+        if (stype === 'home') {
+          var addr = document.getElementById('billing_address');
+          if (!addr || !addr.value.trim()) {
+            alert('Please enter your home address.');
+            if (addr) addr.focus();
+            return;
+          }
+        } else if (stype === 'hotel') {
+          var hName = document.getElementById('hotel_name');
+          var hAddr = document.getElementById('hotel_address');
+          var hRoom = document.getElementById('hotel_room');
+          if (!hName || !hName.value.trim()) { alert('Please enter the hotel name.'); if(hName) hName.focus(); return; }
+          if (!hAddr || !hAddr.value.trim()) { alert('Please enter the hotel address.'); if(hAddr) hAddr.focus(); return; }
+          if (!hRoom || !hRoom.value.trim()) { alert('Please enter the room number.'); if(hRoom) hRoom.focus(); return; }
+        }
+      }
+
       const inputs = steps[currentStep].querySelectorAll('input[required]');
       for (let inp of inputs) {
         // Skip validation for hidden time input since we handle it above
@@ -619,11 +698,34 @@
         // Populate schedule information in confirmation step
         document.getElementById('schedule_date').value = document.getElementById('date').value;
         document.getElementById('schedule_time').value = document.querySelector('input[name="time"]').value;
-        
-        // ===== DOWNPAYMENT FEATURE - COMMENTED OUT FOR FUTURE USE =====
-        // Update downpayment amount initially
-        // setTimeout(updateDownpaymentAmount, 100);
-        // ===== END DOWNPAYMENT FEATURE =====
+
+        // Populate service type + address summary in confirmation step
+        var stype = document.getElementById('service_type_field') ? document.getElementById('service_type_field').value : 'walk-in';
+        var stypeLabels = {'walk-in':'Walk-in (Visit Spa)', 'home':'Home Service', 'hotel':'Hotel Service'};
+        var confirmStypeEl = document.getElementById('confirm_service_type');
+        if (confirmStypeEl) confirmStypeEl.value = stypeLabels[stype] || stype;
+
+        var confirmAddrRow = document.getElementById('confirm_address_row');
+        var confirmAddr    = document.getElementById('confirm_address');
+        if (confirmAddrRow && confirmAddr) {
+            if (stype === 'home') {
+                var addr = document.getElementById('billing_address') ? document.getElementById('billing_address').value : '';
+                confirmAddr.value = addr;
+                confirmAddrRow.style.display = addr ? 'block' : 'none';
+            } else if (stype === 'hotel') {
+                var hName = document.getElementById('hotel_name')    ? document.getElementById('hotel_name').value    : '';
+                var hAddr = document.getElementById('hotel_address') ? document.getElementById('hotel_address').value : '';
+                var hRoom = document.getElementById('hotel_room')    ? document.getElementById('hotel_room').value    : '';
+                var parts = [];
+                if (hName) parts.push(hName);
+                if (hAddr) parts.push(hAddr);
+                if (hRoom) parts.push('Room ' + hRoom);
+                confirmAddr.value = parts.join(', ');
+                confirmAddrRow.style.display = parts.length ? 'block' : 'none';
+            } else {
+                confirmAddrRow.style.display = 'none';
+            }
+        }
     }
     showStep(currentStep);
   }

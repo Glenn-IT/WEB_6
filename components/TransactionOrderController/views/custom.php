@@ -25,8 +25,9 @@
                             <th>Unit Price</th>
                             <th>Quantity</th>
                             <th>Amount</th>
+                            <th>Service Type</th>
                             <th>Type of Delivery</th>
-                            <th>Shipping Address</th>
+                            <th>Location / Address</th>
                             <th>Transaction Date</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -64,8 +65,34 @@
                                             <td><?=$price?></td>
                                             <td><?=$qty?></td>
                                             <td><?=$total?></td>
+                                            <td>
+                                                <?php
+                                                    $stype = isset($value["service_type"]) ? $value["service_type"] : 'walk-in';
+                                                    $stype_badges = [
+                                                        'walk-in'      => '<span class="label" style="background:#28a745;color:#fff;padding:3px 8px;border-radius:4px;">Walk-in</span>',
+                                                        'home'         => '<span class="label" style="background:#007bff;color:#fff;padding:3px 8px;border-radius:4px;">Home Service</span>',
+                                                        'hotel'        => '<span class="label" style="background:#6f42c1;color:#fff;padding:3px 8px;border-radius:4px;">Hotel Service</span>',
+                                                    ];
+                                                    echo isset($stype_badges[$stype]) ? $stype_badges[$stype] : '<span class="label" style="background:#6c757d;color:#fff;padding:3px 8px;border-radius:4px;">'.htmlspecialchars($stype).'</span>';
+                                                ?>
+                                            </td>
                                             <td><?=$value["type_of_payment"]?></td>
-                                            <td><?=$value["billing_address"]?></td>
+                                            <td>
+                                                <?php
+                                                    if ($stype === 'hotel') {
+                                                        if (!empty($value["hotel_name"])) {
+                                                            echo '<strong>Hotel:</strong> ' . htmlspecialchars($value["hotel_name"]) . '<br>';
+                                                        }
+                                                        if (!empty($value["hotel_room"])) {
+                                                            echo '<strong>Room:</strong> ' . htmlspecialchars($value["hotel_room"]);
+                                                        }
+                                                    } elseif ($stype === 'home') {
+                                                        echo !empty($value["billing_address"]) ? htmlspecialchars($value["billing_address"]) : '<span class="text-muted">—</span>';
+                                                    } else {
+                                                        echo '<span class="text-muted">In-store</span>';
+                                                    }
+                                                ?>
+                                            </td>
                                             <td><?=!empty($value["created_at"]) ? date('F j, Y', strtotime($value["created_at"])) : 'N/A'?></td>
                                             <td><?=isset($status[$value["val_stattus"]])?$status[$value["val_stattus"]]:$value["val_stattus"]?></td>
                                             <td>
@@ -97,7 +124,7 @@
                                 } else {
                                     ?>
                                     <tr>
-                                        <td colspan="8"> NO RECORD FOUND!</td>
+                                        <td colspan="13"> NO RECORD FOUND!</td>
                                     </tr>
 
                                     <?php

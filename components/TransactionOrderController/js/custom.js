@@ -4,7 +4,12 @@ const component = `component/transaction-order/`;
 
 
 $(document).ready(function () {
-    $('#maintable').DataTable();
+    $('#maintable').DataTable({
+        language: { emptyTable: "NO RECORD FOUND!" },
+        columnDefs: [
+            { orderable: false, targets: [3, 4, 5, 6, 7, 9, 12] }
+        ]
+    });
 });
 
 $(document).on('click', '.openmodaldetails-modal', function() {

@@ -891,18 +891,16 @@ class CustomerController {
         // ===== END DOWNPAYMENT FEATURE =====
         
         $insert = [
-            "user_id" => $_SESSION["user_id"],
-            "date" => $date,
-            "orrder_no" => $order_no,
-            'time' => $time,
-            'therapist_id' => $therapist_id,
-            'no_ofhead' => $no_ofhead,
-            // ===== DOWNPAYMENT FEATURE - COMMENTED OUT FOR FUTURE USE =====
-            // 'total_amount' => isset($total_payment) ? $total_payment : 0,
-            // 'downpayment_amount' => $downpayment_amount,
-            // 'downpayment_reference' => isset($reference_code) ? $reference_code : '',
-            // 'downpayment_status' => isset($reference_code) && !empty($reference_code) ? 'PAID' : 'PENDING'
-            // ===== END DOWNPAYMENT FEATURE =====
+            "user_id"         => $_SESSION["user_id"],
+            "date"            => $date,
+            "orrder_no"       => $order_no,
+            'time'            => $time,
+            'therapist_id'    => $therapist_id,
+            'no_ofhead'       => $no_ofhead,
+            'service_type'    => isset($service_type)  ? $service_type  : 'walk-in',
+            'billing_address' => isset($billing_address) ? $billing_address : '',
+            'hotel_name'      => isset($hotel_name)    ? $hotel_name    : '',
+            'hotel_room'      => isset($hotel_room)    ? $hotel_room    : '',
         ];
 
         $this->db->insertRequestBatchRquest($insert,'main_order');
@@ -1018,6 +1016,33 @@ class CustomerController {
                                 <span class='info-label'>Therapist:</span>
                                 <span class='info-value'>" . htmlspecialchars($therapist_name) . "</span>
                             </div>
+                            
+                            <h3 style='color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 5px; margin-top: 20px;'>Service Information</h3>
+                            <div class='info-row'>
+                                <span class='info-label'>Service Type:</span>
+                                <span class='info-value'>" . (function() use ($insert) {
+                                    $stype = $insert['service_type'] ?? 'walk-in';
+                                    $labels = ['walk-in' => 'Walk-in', 'home' => 'Home Service', 'hotel' => 'Hotel Service'];
+                                    $colors = ['walk-in' => '#28a745', 'home' => '#007bff', 'hotel' => '#6f42c1'];
+                                    $label = $labels[$stype] ?? ucfirst($stype);
+                                    $color = $colors[$stype] ?? '#6c757d';
+                                    return "<span style='background:{$color};color:#fff;padding:2px 8px;border-radius:4px;font-size:13px;'>{$label}</span>";
+                                })() . "</span>
+                            </div>" .
+                            ((!empty($insert['billing_address']) && $insert['service_type'] === 'home') ? "
+                            <div class='info-row'>
+                                <span class='info-label'>Home Address:</span>
+                                <span class='info-value'>" . htmlspecialchars($insert['billing_address']) . "</span>
+                            </div>" : "") .
+                            (($insert['service_type'] === 'hotel') ? "
+                            <div class='info-row'>
+                                <span class='info-label'>Hotel Name:</span>
+                                <span class='info-value'>" . htmlspecialchars($insert['hotel_name'] ?? 'N/A') . "</span>
+                            </div>
+                            <div class='info-row'>
+                                <span class='info-label'>Room No.:</span>
+                                <span class='info-value'>" . htmlspecialchars($insert['hotel_room'] ?? 'N/A') . "</span>
+                            </div>" : "") . "
                             
                             <h3 style='color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 5px; margin-top: 20px;'>Customer Information</h3>
                             <div class='info-row'>
@@ -1249,6 +1274,19 @@ class CustomerController {
     
     }
 
+
+    public function serviceTypeModal() {
+        $data = getRequestAll();
+        // Pass checkout IDs through so the next step can use them
+        $res = [
+            'header' => 'Choose Service Type',
+            'html'   => loadView('components/'.$this->view.'/views/service_type_modal', $data),
+            'button' => '',
+            'action' => '',
+            'size'   => 'modal-md'
+        ];
+        echo json_encode($res);
+    }
 
     public function terms_and_condition() {
         $data = getRequestAll();

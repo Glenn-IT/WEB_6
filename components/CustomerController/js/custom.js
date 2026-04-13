@@ -964,27 +964,71 @@ $(document).ready(function () {
 });
 
 $(document).on("click", ".btn-checkouttocartbooking", function () {
-  var action = module + "terms_and_condition";
-
-  const calendar = false;
-
-  var dataObj = {}; // Initialize the empty object
+  // Step 1: Show the service type picker modal first
   var form = document.getElementById("getlsitCartt");
   var formData = new FormData(form);
-  // Append any custom data
-  for (const key in dataObj) {
-    if (dataObj.hasOwnProperty(key)) {
-      formData.append(key, dataObj[key]);
-    }
-  }
 
-  var request = main.send_ajax(formData, action, "POST", true);
+  var request = main.send_ajax(formData, module + "serviceTypeModal", "POST", true);
   request.done(function (data) {
-    action = component + data.action;
-
-    main.modalOpen(data.header, data.html, data.button, action, data.size);
+    main.modalOpen(data.header, data.html, data.button, "", data.size);
   });
 });
+
+// Service type card selection
+$(document).on("click", ".service-type-card", function () {
+  $(".service-type-card").removeClass("selected");
+  $(this).addClass("selected");
+  $("#btn-proceed-service-type").show();
+});
+
+// "Proceed" button inside service type picker
+$(document).on("click", "#btn-proceed-service-type", function () {
+  var selectedType = $(".service-type-card.selected").data("type");
+  if (!selectedType) return;
+
+  // Collect checkout IDs from the hidden inputs the view rendered
+  var formData = new FormData();
+  $(".stm-checkout-id").each(function () {
+    formData.append("checkoutIDS[]", $(this).val());
+  });
+  formData.append("service_type", selectedType);
+
+  var request = main.send_ajax(formData, module + "terms_and_condition", "POST", true);
+  request.done(function (data) {
+    main.modalOpen(data.header, data.html, data.button, component + data.action, data.size);
+
+    // After the booking modal opens, set the service type on the hidden field
+    // and show/hide the address/hotel fields accordingly
+    setTimeout(function () {
+      applyServiceType(selectedType);
+    }, 300);
+  });
+});
+
+function applyServiceType(type) {
+  $("#service_type_field").val(type);
+
+  // Hide all optional blocks first
+  $("#home-service-fields").hide();
+  $("#hotel-service-fields").hide();
+  // Remove required from all optional inputs
+  $("#billing_address, #hotel_name, #hotel_address, #hotel_room").removeAttr("required");
+
+  if (type === "home") {
+    $("#home-service-fields").show();
+    $("#billing_address").attr("required", "required");
+  } else if (type === "hotel") {
+    $("#hotel-service-fields").show();
+    $("#hotel_name, #hotel_address, #hotel_room").attr("required", "required");
+  }
+
+  // Update the confirmation step label
+  var labels = { "walk-in": "Walk-in (Visit Spa)", "home": "Home Service", "hotel": "Hotel Service" };
+  $("#confirm_service_type").val(labels[type] || type);
+}
+
+// When wizard reaches Step 4 (Confirmation), address summary is handled
+// inside the place_bid_terms.php nextPrev() function directly.
 var calendar = false;
 
 function tableGuest(itemlist, no_head) {
