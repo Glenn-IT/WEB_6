@@ -7,7 +7,7 @@ $(document).ready(function () {
   }
   $("#maintable").DataTable({
     language: { emptyTable: "NO RECORD FOUND!" },
-    columnDefs: [{ orderable: false, targets: [1, 5] }] // Photo col 1, Action col 5
+    columnDefs: [{ orderable: false, targets: [1, 5] }], // Photo col 1, Action col 5
   });
 });
 
@@ -24,7 +24,7 @@ $(document).on("submit", ".modalOpenCustom form", function (e) {
     main.alertMessage(
       "warning",
       "Validation Error",
-      "Therapist name cannot be empty or contain only spaces!"
+      "Therapist name cannot be empty or contain only spaces!",
     );
     // Focus on the name input
     $(this).find('input[name="name"]').focus();
@@ -36,7 +36,7 @@ $(document).on("submit", ".modalOpenCustom form", function (e) {
     main.alertMessage(
       "warning",
       "Validation Error",
-      "Therapist name must contain at least one non-space character!"
+      "Therapist name must contain at least one non-space character!",
     );
     $(this).find('input[name="name"]').focus();
     return false;
@@ -90,7 +90,7 @@ $(document).on("click", ".delete", function () {
     "DELETE RECORD",
     "Are you sure you want to delete this record? ",
     "deleteRecord",
-    formData
+    formData,
   );
 });
 
@@ -105,7 +105,7 @@ function deleteRecord(formData) {
         "Successfully Deleted!",
         "Are you sure you want to reload this page? ",
         "reloadPage",
-        ""
+        "",
       );
     } else {
       main.alertMessage("danger", "Failed to Delete!", "");

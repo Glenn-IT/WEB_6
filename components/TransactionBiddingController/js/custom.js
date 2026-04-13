@@ -4,9 +4,7 @@ $(document).ready(function () {
   $("#maintable").DataTable({
     order: [[0, "desc"]],
     language: { emptyTable: "NO RECORD FOUND!" },
-    columnDefs: [
-      { orderable: false, targets: [4, 7] }
-    ]
+    columnDefs: [{ orderable: false, targets: [4, 7] }],
   });
 });
 
@@ -53,7 +51,7 @@ $(document).on("click", ".updateORder", function () {
     "UPDATE RECORD",
     "Are you sure you want to " + $(this).data("status") + " this record? ",
     "updateRecord",
-    formData
+    formData,
   );
 });
 
@@ -68,28 +66,28 @@ function updateRecord(formData) {
         data.newStatus === "PROCESSED"
           ? "processed"
           : data.newStatus === "COMPLETED"
-          ? "completed"
-          : data.newStatus === "DECLINED"
-          ? "declined"
-          : data.newStatus.toLowerCase();
+            ? "completed"
+            : data.newStatus === "DECLINED"
+              ? "declined"
+              : data.newStatus.toLowerCase();
 
       var statusColor =
         data.newStatus === "PROCESSED"
           ? "warning"
           : data.newStatus === "COMPLETED"
-          ? "success"
-          : data.newStatus === "DECLINED"
-          ? "danger"
-          : "info";
+            ? "success"
+            : data.newStatus === "DECLINED"
+              ? "danger"
+              : "info";
 
       var statusIcon =
         data.newStatus === "PROCESSED"
           ? "clock-o"
           : data.newStatus === "COMPLETED"
-          ? "check-circle"
-          : data.newStatus === "DECLINED"
-          ? "times-circle"
-          : "info-circle";
+            ? "check-circle"
+            : data.newStatus === "DECLINED"
+              ? "times-circle"
+              : "info-circle";
 
       var modalContent = `
                 <div class="text-center" style="padding: 20px;">
@@ -122,7 +120,7 @@ function updateRecord(formData) {
         modalContent,
         modalButtons,
         "",
-        "modal-md"
+        "modal-md",
       );
     } else {
       main.alertMessage("danger", "Failed to Update!", "");

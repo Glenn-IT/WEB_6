@@ -43,7 +43,7 @@ $(document).on("click", ".delete", function () {
     "DELETE RECORD",
     "Are you sure you want to delete this record? ",
     "deleteRecord",
-    formData
+    formData,
   );
 });
 
@@ -58,7 +58,7 @@ function deleteRecord(formData) {
         "Successfully Deleted!",
         "Are you sure you want to reload this page? ",
         "reloadPage",
-        ""
+        "",
       );
     } else {
       main.alertMessage("danger", "Failed to Delete!", "");
@@ -97,7 +97,7 @@ $(document).on("click", ".cancel-appointment-btn", function () {
       orderNo +
       "? This action cannot be undone.",
     "cancelAppointmentConfirm",
-    formData
+    formData,
   );
 });
 
@@ -125,7 +125,7 @@ function cancelAppointmentConfirm(formData) {
           .find("td:last")
           .html('<span class="badge bg-danger">CANCELLED</span>');
         $button.replaceWith(
-          '<span class="badge bg-secondary">Cancelled</span>'
+          '<span class="badge bg-secondary">Cancelled</span>',
         );
 
         main.confirmMessage(
@@ -133,7 +133,7 @@ function cancelAppointmentConfirm(formData) {
           "Appointment Cancelled!",
           "Your appointment has been successfully cancelled. The page will reload to show updated status.",
           "reloadPage",
-          ""
+          "",
         );
       } else {
         // Error - restore button
@@ -141,7 +141,7 @@ function cancelAppointmentConfirm(formData) {
         main.alertMessage(
           "danger",
           "Failed to Cancel Appointment!",
-          data.message || "An error occurred."
+          data.message || "An error occurred.",
         );
       }
     })
@@ -183,10 +183,10 @@ function updateCountdowns() {
 
     const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
     const hours = Math.floor(
-      (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)
+      (timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
     );
     const minutes = Math.floor(
-      (timeRemaining % (1000 * 60 * 60)) / (1000 * 60)
+      (timeRemaining % (1000 * 60 * 60)) / (1000 * 60),
     );
     const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
@@ -232,7 +232,7 @@ $(document).on(
       main.alertMessage("danger", "Exceeded Limit", "");
       $(".qty-control__number").val(min);
     }
-  }
+  },
 );
 
 $(document).on("click", ".btn-addtocart", function () {
@@ -451,14 +451,14 @@ function dateClickChange() {
       8,
       30,
       11,
-      numberOfClients
+      numberOfClients,
     );
     const pmOptions = buildSelectOptionsWithClientCount(
       timeSlotCounts,
       13,
       0,
       22,
-      numberOfClients
+      numberOfClients,
     );
 
     // Update the select elements
@@ -485,7 +485,7 @@ function dateClickChange() {
     startHour,
     startMinute,
     endHour,
-    numberOfClients
+    numberOfClients,
   ) {
     const options = [];
     const MAX_CLIENTS_PER_SLOT = 5;
@@ -521,7 +521,7 @@ function dateClickChange() {
 
         const time24 = `${String(h).padStart(2, "0")}:${String(m).padStart(
           2,
-          "0"
+          "0",
         )}:00`;
 
         // Check if this time slot is in the past for today's date
@@ -543,17 +543,17 @@ function dateClickChange() {
           console.log(
             `${timeType} Slot Debug: ${displayHour}:${String(m).padStart(
               2,
-              "0"
+              "0",
             )} ${timeType} (${h}:${String(m).padStart(
               2,
-              "0"
+              "0",
             )}) - Browser: ${browserHour}:${String(browserMinute).padStart(
               2,
-              "0"
+              "0",
             )} - Server: ${currentHour}:${String(currentMinute).padStart(
               2,
-              "0"
-            )} - isPast: ${isPastTime}`
+              "0",
+            )} - isPast: ${isPastTime}`,
           );
         }
 
@@ -593,7 +593,7 @@ function dateClickChange() {
             isDisabled ? "disabled" : ""
           } data-booking-count="${existingBookings}" data-available-slots="${availableSlots}" data-is-past="${isPastTime}">
             ${dispHr}:${String(m).padStart(2, "0")} ${ampm}${availabilityText}
-          </option>`
+          </option>`,
         );
       }
     }
@@ -607,7 +607,7 @@ function dateClickChange() {
       startHour,
       startMinute,
       endHour,
-      1
+      1,
     );
   }
 }
@@ -625,7 +625,7 @@ $(document).on("change", ".timescheulde", function () {
 
     if (isPastTime) {
       alert(
-        "You cannot schedule an appointment for a past time. Please select a future time slot."
+        "You cannot schedule an appointment for a past time. Please select a future time slot.",
       );
       this.value = ""; // Reset selection
       return;
@@ -638,7 +638,7 @@ $(document).on("change", ".timescheulde", function () {
 
     if (numberOfClients > availableSlots) {
       alert(
-        `This time slot only has ${availableSlots} spots available, but you selected ${numberOfClients} clients. Please choose a different time or reduce the number of clients.`
+        `This time slot only has ${availableSlots} spots available, but you selected ${numberOfClients} clients. Please choose a different time or reduce the number of clients.`,
       );
       this.value = ""; // Reset selection
       return;
@@ -867,7 +867,7 @@ function lockLoginForm(seconds) {
   var countdownElement = form.find(".lockout-countdown");
   if (countdownElement.length === 0) {
     countdownElement = $(
-      '<div class="lockout-countdown alert alert-warning mt-2"></div>'
+      '<div class="lockout-countdown alert alert-warning mt-2"></div>',
     );
     form.append(countdownElement);
   }
@@ -884,7 +884,7 @@ function lockLoginForm(seconds) {
           "Please wait <strong>" +
           remainingTime +
           "</strong> seconds before trying again.<br>" +
-          '<small><i class="fa fa-envelope" style="margin-right: 5px;"></i>A security notification has been sent to your email.</small>'
+          '<small><i class="fa fa-envelope" style="margin-right: 5px;"></i>A security notification has been sent to your email.</small>',
       );
       loginButton.text("Locked (" + remainingTime + "s)");
       remainingTime--;
@@ -968,7 +968,12 @@ $(document).on("click", ".btn-checkouttocartbooking", function () {
   var form = document.getElementById("getlsitCartt");
   var formData = new FormData(form);
 
-  var request = main.send_ajax(formData, module + "serviceTypeModal", "POST", true);
+  var request = main.send_ajax(
+    formData,
+    module + "serviceTypeModal",
+    "POST",
+    true,
+  );
   request.done(function (data) {
     main.modalOpen(data.header, data.html, data.button, "", data.size);
   });
@@ -993,9 +998,20 @@ $(document).on("click", "#btn-proceed-service-type", function () {
   });
   formData.append("service_type", selectedType);
 
-  var request = main.send_ajax(formData, module + "terms_and_condition", "POST", true);
+  var request = main.send_ajax(
+    formData,
+    module + "terms_and_condition",
+    "POST",
+    true,
+  );
   request.done(function (data) {
-    main.modalOpen(data.header, data.html, data.button, component + data.action, data.size);
+    main.modalOpen(
+      data.header,
+      data.html,
+      data.button,
+      component + data.action,
+      data.size,
+    );
 
     // After the booking modal opens, set the service type on the hidden field
     // and show/hide the address/hotel fields accordingly
@@ -1026,7 +1042,11 @@ function applyServiceType(type) {
   }
 
   // Update the confirmation step label
-  var labels = { "walk-in": "Walk-in (Visit Spa)", "home": "Home Service", "hotel": "Hotel Service" };
+  var labels = {
+    "walk-in": "Walk-in (Visit Spa)",
+    home: "Home Service",
+    hotel: "Hotel Service",
+  };
   $("#confirm_service_type").val(labels[type] || type);
 }
 
