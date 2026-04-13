@@ -3,26 +3,28 @@
 <section class="full-width_padding">
     <div class="shop-banner position-relative">
       <div class="banner-slideshow position-relative" style="height: 420px; overflow: hidden;">
-        <!-- Slide 1 -->
-        <div class="banner-slide active" style="position: absolute; width: 100%; height: 100%; transition: opacity 1s ease-in-out;">
-          <img loading="lazy" src="<?=$_ENV["URL_HOST"]?>src/images/banner/Hero 1.jpg" width="1759" height="420" alt="Banner 1" class="slideshow-bg__img object-fit-cover" style="width: 100%; height: 100%; object-fit: cover;">
+
+        <?php
+        // Use DB banners if available, fall back to static images
+        $bannerImages = (isset($banners) && count($banners) > 0) ? $banners : [
+            ['image_path' => 'src/images/banner/Hero 1.jpg', 'title' => 'Banner 1'],
+            ['image_path' => 'src/images/banner/Hero 2.jpg', 'title' => 'Banner 2'],
+            ['image_path' => 'src/images/banner/Hero 3.jpg', 'title' => 'Banner 3'],
+            ['image_path' => 'src/images/banner/Hero 4.jpg', 'title' => 'Banner 4'],
+            ['image_path' => 'src/images/banner/Hero 5.jpg', 'title' => 'Banner 5'],
+        ];
+        foreach ($bannerImages as $bIdx => $banner):
+        ?>
+        <div class="banner-slide <?= $bIdx === 0 ? 'active' : '' ?>"
+             style="position: absolute; width: 100%; height: 100%; <?= $bIdx !== 0 ? 'opacity: 0;' : '' ?> transition: opacity 1s ease-in-out;">
+          <img loading="lazy"
+               src="<?= $_ENV['URL_HOST'] . $banner['image_path'] ?>"
+               width="1759" height="420"
+               alt="<?= htmlspecialchars($banner['title']) ?>"
+               class="slideshow-bg__img object-fit-cover"
+               style="width: 100%; height: 100%; object-fit: cover;">
         </div>
-        <!-- Slide 2 -->
-        <div class="banner-slide" style="position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out;">
-          <img loading="lazy" src="<?=$_ENV["URL_HOST"]?>src/images/banner/Hero 2.jpg" width="1759" height="420" alt="Banner 2" class="slideshow-bg__img object-fit-cover" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-        <!-- Slide 3 -->
-        <div class="banner-slide" style="position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out;">
-          <img loading="lazy" src="<?=$_ENV["URL_HOST"]?>src/images/banner/Hero 3.jpg" width="1759" height="420" alt="Banner 3" class="slideshow-bg__img object-fit-cover" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-        <!-- Slide 4 -->
-        <div class="banner-slide" style="position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out;">
-          <img loading="lazy" src="<?=$_ENV["URL_HOST"]?>src/images/banner/Hero 4.jpg" width="1759" height="420" alt="Banner 4" class="slideshow-bg__img object-fit-cover" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
-        <!-- Slide 5 -->
-        <div class="banner-slide" style="position: absolute; width: 100%; height: 100%; opacity: 0; transition: opacity 1s ease-in-out;">
-          <img loading="lazy" src="<?=$_ENV["URL_HOST"]?>src/images/banner/Hero 5.jpg" width="1759" height="420" alt="Banner 5" class="slideshow-bg__img object-fit-cover" style="width: 100%; height: 100%; object-fit: cover;">
-        </div>
+        <?php endforeach; ?>
 
         <!-- Navigation Arrows -->
         <button class="banner-prev" style="position: absolute; left: 20px; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: white; border: none; padding: 15px 20px; cursor: pointer; z-index: 10; border-radius: 5px; font-size: 20px;">❮</button>
@@ -30,11 +32,10 @@
 
         <!-- Indicators/Dots -->
         <div class="banner-indicators" style="position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; z-index: 10;">
-          <span class="indicator active" data-slide="0" style="width: 12px; height: 12px; border-radius: 50%; background: white; cursor: pointer; opacity: 1;"></span>
-          <span class="indicator" data-slide="1" style="width: 12px; height: 12px; border-radius: 50%; background: white; cursor: pointer; opacity: 0.5;"></span>
-          <span class="indicator" data-slide="2" style="width: 12px; height: 12px; border-radius: 50%; background: white; cursor: pointer; opacity: 0.5;"></span>
-          <span class="indicator" data-slide="3" style="width: 12px; height: 12px; border-radius: 50%; background: white; cursor: pointer; opacity: 0.5;"></span>
-          <span class="indicator" data-slide="4" style="width: 12px; height: 12px; border-radius: 50%; background: white; cursor: pointer; opacity: 0.5;"></span>
+          <?php foreach ($bannerImages as $bIdx => $banner): ?>
+          <span class="indicator <?= $bIdx === 0 ? 'active' : '' ?>" data-slide="<?= $bIdx ?>"
+                style="width: 12px; height: 12px; border-radius: 50%; background: white; cursor: pointer; opacity: <?= $bIdx === 0 ? '1' : '0.5' ?>;"></span>
+          <?php endforeach; ?>
         </div>
       </div>
     </div><!-- /.shop-banner position-relative -->
@@ -49,70 +50,29 @@
   let autoSlideInterval;
 
   function showSlide(index) {
-    // Hide all slides
-    slides.forEach(slide => {
-      slide.style.opacity = '0';
-    });
-    
-    // Remove active class from all indicators
-    indicators.forEach(indicator => {
-      indicator.style.opacity = '0.5';
-      indicator.classList.remove('active');
-    });
-
-    // Show current slide
+    slides.forEach(slide => { slide.style.opacity = '0'; });
+    indicators.forEach(indicator => { indicator.style.opacity = '0.5'; indicator.classList.remove('active'); });
     slides[index].style.opacity = '1';
     indicators[index].style.opacity = '1';
     indicators[index].classList.add('active');
-    
     currentSlide = index;
   }
 
-  function nextSlide() {
-    let next = (currentSlide + 1) % totalSlides;
-    showSlide(next);
-  }
+  function nextSlide() { showSlide((currentSlide + 1) % totalSlides); }
+  function prevSlide() { showSlide((currentSlide - 1 + totalSlides) % totalSlides); }
+  function startAutoSlide() { autoSlideInterval = setInterval(nextSlide, 5000); }
+  function stopAutoSlide()  { clearInterval(autoSlideInterval); }
 
-  function prevSlide() {
-    let prev = (currentSlide - 1 + totalSlides) % totalSlides;
-    showSlide(prev);
-  }
+  document.querySelector('.banner-prev').addEventListener('click', function() { stopAutoSlide(); prevSlide(); startAutoSlide(); });
+  document.querySelector('.banner-next').addEventListener('click', function() { stopAutoSlide(); nextSlide(); startAutoSlide(); });
 
-  function startAutoSlide() {
-    autoSlideInterval = setInterval(nextSlide, 5000); // Change slide every 5 seconds
-  }
-
-  function stopAutoSlide() {
-    clearInterval(autoSlideInterval);
-  }
-
-  // Event listeners for navigation buttons
-  document.querySelector('.banner-prev').addEventListener('click', function() {
-    stopAutoSlide();
-    prevSlide();
-    startAutoSlide();
-  });
-
-  document.querySelector('.banner-next').addEventListener('click', function() {
-    stopAutoSlide();
-    nextSlide();
-    startAutoSlide();
-  });
-
-  // Event listeners for indicators
   indicators.forEach((indicator, index) => {
-    indicator.addEventListener('click', function() {
-      stopAutoSlide();
-      showSlide(index);
-      startAutoSlide();
-    });
+    indicator.addEventListener('click', function() { stopAutoSlide(); showSlide(index); startAutoSlide(); });
   });
 
-  // Pause on hover
   document.querySelector('.banner-slideshow').addEventListener('mouseenter', stopAutoSlide);
   document.querySelector('.banner-slideshow').addEventListener('mouseleave', startAutoSlide);
 
-  // Start auto-sliding
   startAutoSlide();
 })();
 </script>
@@ -120,6 +80,59 @@
 
 
 <div class="mb-3 mb-xl-5 pt-1 pb-5"></div>
+
+<?php if (isset($promos) && count($promos) > 0): ?>
+<!-- ══════════════════════════════════════════════════════════
+     PROMOS SECTION  – rendered from site_promos DB table
+     ══════════════════════════════════════════════════════════ -->
+<section class="promos-section container mb-5">
+  <h2 class="section-title text-uppercase text-center mb-1 mb-md-3 pb-xl-2 mb-xl-4">
+    Current <strong>Promotions</strong>
+  </h2>
+  <div class="row justify-content-center">
+    <?php foreach ($promos as $promo): ?>
+    <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+      <?php
+        $promoLink = '#our-services';
+        if (!empty($promo['linked_item_id'])) {
+            $promoLink = $_ENV['URL_HOST'] . 'customer/customer/index?page=productItem&id=' . $promo['linked_item_id'];
+        }
+      ?>
+      <a href="<?= $promoLink ?>" class="text-decoration-none">
+        <div class="promo-card card h-100 shadow-sm border-0" style="border-radius:12px;overflow:hidden;transition:transform .2s;">
+          <?php if (!empty($promo['image_path'])): ?>
+          <div style="height:180px;overflow:hidden;">
+            <img src="<?= $_ENV['URL_HOST'] . $promo['image_path'] ?>"
+                 alt="<?= htmlspecialchars($promo['title']) ?>"
+                 style="width:100%;height:100%;object-fit:cover;">
+          </div>
+          <?php endif; ?>
+          <div class="card-body p-3">
+            <?php if (!empty($promo['discount_text'])): ?>
+            <span class="badge" style="background:#c8906e;color:#fff;font-size:13px;border-radius:20px;padding:4px 12px;margin-bottom:8px;display:inline-block;">
+              <?= htmlspecialchars($promo['discount_text']) ?>
+            </span>
+            <?php endif; ?>
+            <h6 class="fw-bold mb-1" style="color:#333;"><?= htmlspecialchars($promo['title']) ?></h6>
+            <?php if (!empty($promo['description'])): ?>
+            <p class="text-muted mb-0" style="font-size:13px;"><?= htmlspecialchars($promo['description']) ?></p>
+            <?php endif; ?>
+          </div>
+        </div>
+      </a>
+    </div>
+    <?php endforeach; ?>
+  </div>
+</section>
+
+<style>
+.promo-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0,0,0,.12) !important; }
+</style>
+
+<div class="mb-3 mb-xl-5 pt-1 pb-3"></div>
+<?php endif; ?>
+
+<div id="our-services"></div>
 
     <section class="products-carousel container">
        <h2 class="section-title text-uppercase text-center mb-1 mb-md-3 pb-xl-2 mb-xl-4">Our  <strong>Services</strong></h2>
