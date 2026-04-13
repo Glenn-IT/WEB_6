@@ -29,21 +29,28 @@
     <div class="mb-4 pb-4"></div>
     <section class="about-us container">
       <div class="mw-930">
-        <h2 class="page-title " style="text-align: center;">Touch and Care Massage and Spa</h2>
+        <h2 class="page-title " style="text-align: center;">
+          <?= isset($about_sections['main_title']) ? htmlspecialchars($about_sections['main_title']) : 'Touch and Care Massage and Spa' ?>
+        </h2>
       </div>
       <div class="about-us__content pb-5 mb-5">
-   
         <div class="mw-930">
-          <p class="fs-6 fw-medium mb-4">At Touch and Care Massage and Spa, we believe that healing starts with the power of touch and the warmth of genuine care. Our spa is a peaceful sanctuary dedicated to helping you relax, recharge, and restore your mind and body.</p>
-
-          <p class="fs-6 fw-medium mb-4">Founded with a passion for wellness and holistic beauty, we offer a wide range of services—from Swedish, Shiatsu, hot stone, ventosa, and therapeutic massages to nail care, skin care, and hair treatment. Each session is delivered by skilled and certified professionals who prioritize your comfort, privacy, and overall well-being.</p>
-
-        <p class="fs-6 fw-medium mb-4">We don’t just offer massages—we create a full self-care experience. Whether you're relieving stress, treating your skin, pampering your nails, or nourishing your hair, we’re here to make every visit rejuvenating and memorable.</p>
-
-
-          <p class="fs-6 fw-medium mb-4">Come and experience the perfect harmony of touch and care—where your beauty and relaxation are always our priority.</p>
+          <?php
+          $paragraphKeys = ['paragraph_1','paragraph_2','paragraph_3','paragraph_4'];
+          $paragraphDefaults = [
+            'paragraph_1' => 'At Touch and Care Massage and Spa, we believe that healing starts with the power of touch and the warmth of genuine care. Our spa is a peaceful sanctuary dedicated to helping you relax, recharge, and restore your mind and body.',
+            'paragraph_2' => 'Founded with a passion for wellness and holistic beauty, we offer a wide range of services—from Swedish, Shiatsu, hot stone, ventosa, and therapeutic massages to nail care, skin care, and hair treatment.',
+            'paragraph_3' => 'We don\'t just offer massages—we create a full self-care experience.',
+            'paragraph_4' => 'Come and experience the perfect harmony of touch and care—where your beauty and relaxation are always our priority.',
+          ];
+          foreach ($paragraphKeys as $pKey):
+            $pText = isset($about_sections[$pKey]) && !empty($about_sections[$pKey])
+                       ? $about_sections[$pKey] : ($paragraphDefaults[$pKey] ?? '');
+            if (!empty($pText)):
+          ?>
+          <p class="fs-6 fw-medium mb-4"><?= htmlspecialchars($pText) ?></p>
+          <?php endif; endforeach; ?>
         </div>
-      
       </div>
     </section>
 
@@ -102,19 +109,23 @@
               </div>
             </div>
           </div>
-          
           <!-- Map -->
           <div class="col-lg-6 mb-4">
             <div class="map-container">
               <h4 class="mb-4">Find Us</h4>
               <div class="embed-responsive embed-responsive-16by9" style="height: 300px;">
-                <iframe 
-                  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3827.123456789!2d121.73000000000001!3d17.625000000000004!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sJPF7%2BM72%2C%20Diversion%20Road%2C%20Tuguegarao%20City%2C%20Cagayan!5e0!3m2!1sen!2sph!4v1697000000000!5m2!1sen!2sph" 
-                  width="100%" 
-                  height="100%" 
-                  style="border:0;" 
-                  allowfullscreen="" 
-                  loading="lazy" 
+                <?php
+                $mapSrc = isset($contact_info['map_embed']) && !empty($contact_info['map_embed'])
+                    ? $contact_info['map_embed']
+                    : 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3827.123456789!2d121.730000000!3d17.625000000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sJPF7%2BM72%2C%20Diversion%20Road!5e0!3m2!1sen!2sph!4v16970000000000';
+                ?>
+                <iframe
+                  src="<?= htmlspecialchars($mapSrc) ?>"
+                  width="100%"
+                  height="100%"
+                  style="border:0;"
+                  allowfullscreen=""
+                  loading="lazy"
                   referrerpolicy="no-referrer-when-downgrade"
                   class="rounded">
                 </iframe>
