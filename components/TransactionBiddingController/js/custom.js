@@ -3,6 +3,10 @@ const component = `component/transaction-bidding/`;
 $(document).ready(function () {
   $("#maintable").DataTable({
     order: [[0, "desc"]],
+    language: { emptyTable: "NO RECORD FOUND!" },
+    columnDefs: [
+      { orderable: false, targets: [4, 7] }
+    ]
   });
 });
 
