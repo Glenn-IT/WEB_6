@@ -199,13 +199,29 @@ class CustomerController {
         }
 
         $res["contact_info"] = [
-            "address" => isset($sections['contact_address']) ? $sections['contact_address'] : 'JPF7+M72, Diversion Road, Tuguegarao City, Cagayan',
-            "phone"   => isset($sections['contact_phone'])   ? $sections['contact_phone']   : '09356724821',
-            "email"   => isset($sections['contact_email'])   ? $sections['contact_email']   : 'touchandcaremassageandspa@gmail.com',
-            "map_embed" => isset($sections['map_embed'])     ? $sections['map_embed']       : '',
+            "address"   => isset($sections['contact_address']) ? $sections['contact_address'] : 'JPF7+M72, Diversion Road, Tuguegarao City, Cagayan',
+            "phone"     => isset($sections['contact_phone'])   ? $sections['contact_phone']   : '09356724821',
+            "email"     => isset($sections['contact_email'])   ? $sections['contact_email']   : 'touchandcaremassageandspa@gmail.com',
+            "map_embed" => isset($sections['map_embed'])       ? $sections['map_embed']       : '',
         ];
 
         $res["about_sections"] = $sections;
+
+        // Load therapists for "Who We Are" section
+        $res["therapists"] = $this->db->Select(
+            "SELECT t.*, b.name AS ser_type
+             FROM therapist t
+             LEFT JOIN brand b ON b.id = t.service_id
+             WHERE t.deleted = 0
+             ORDER BY t.id ASC",
+            []
+        );
+
+        // Team / group photo
+        $teamPhoto = $this->db->Select(
+            "SELECT * FROM site_team_photo WHERE deleted = 0 AND is_active = 1 ORDER BY id DESC LIMIT 1", []
+        );
+        $res["team_photo"] = count($teamPhoto) > 0 ? $teamPhoto[0] : null;
         
         $res["developers"] = [
             [
