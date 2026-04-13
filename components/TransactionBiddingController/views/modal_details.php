@@ -16,6 +16,36 @@
         <label for="orderno">Time:</label>
         <input type="text" class="form-control" id="orderno" placeholder="" value="<?=($details)?$details["format_time"]:''?>" readonly>
     </div>
+
+    <?php
+        $stype = !empty($details["service_type"]) ? $details["service_type"] : 'walk-in';
+        $stype_labels = ['walk-in' => 'Walk-in', 'home' => 'Home Service', 'hotel' => 'Hotel Service'];
+        $stype_colors = ['walk-in' => '#28a745', 'home' => '#007bff', 'hotel' => '#6f42c1'];
+        $stype_label  = $stype_labels[$stype]  ?? ucfirst($stype);
+        $stype_color  = $stype_colors[$stype]  ?? '#6c757d';
+    ?>
+    <div class="form-group col-md-12">
+        <label>Service Type:</label><br>
+        <span style="background:<?=$stype_color?>;color:#fff;padding:4px 14px;border-radius:5px;font-size:14px;font-weight:600;">
+            <?=htmlspecialchars($stype_label)?>
+        </span>
+    </div>
+
+    <?php if ($stype === 'home'): ?>
+    <div class="form-group col-md-12">
+        <label>Home Address:</label>
+        <textarea class="form-control" rows="2" readonly><?=htmlspecialchars($details["billing_address"] ?? '')?></textarea>
+    </div>
+    <?php elseif ($stype === 'hotel'): ?>
+    <div class="form-group col-md-6">
+        <label>Hotel Name:</label>
+        <input type="text" class="form-control" value="<?=htmlspecialchars($details["hotel_name"] ?? '')?>" readonly>
+    </div>
+    <div class="form-group col-md-6">
+        <label>Room No.:</label>
+        <input type="text" class="form-control" value="<?=htmlspecialchars($details["hotel_room"] ?? '')?>" readonly>
+    </div>
+    <?php endif; ?>
 </div>
 
 
@@ -129,10 +159,27 @@
                 <input type="text" class="form-control" id="orderno" placeholder="" value="<?=($details)?$details["full_name"]:''?>" readonly>
             </div>
 
+            <?php if ($stype === 'home'): ?>
             <div class="form-group col-md-12">
-                <label for="orderno">Address:</label>
-                <input type="text" class="form-control" id="orderno" placeholder="" value="<?=($details)?$details["billing_address"]:''?>" readonly>
+                <label>Home Address:</label>
+                <textarea class="form-control" rows="2" readonly><?=htmlspecialchars($details["billing_address"] ?? '')?></textarea>
             </div>
+            <?php elseif ($stype === 'hotel'): ?>
+            <div class="form-group col-md-6">
+                <label>Hotel Name:</label>
+                <input type="text" class="form-control" value="<?=htmlspecialchars($details["hotel_name"] ?? '')?>" readonly>
+            </div>
+            <div class="form-group col-md-6">
+                <label>Room No.:</label>
+                <input type="text" class="form-control" value="<?=htmlspecialchars($details["hotel_room"] ?? '')?>" readonly>
+            </div>
+            <?php else: ?>
+            <div class="form-group col-md-12">
+                <label>Address:</label>
+                <input type="text" class="form-control" value="In-store (Walk-in)" readonly>
+            </div>
+            <?php endif; ?>
+
             <div class="form-group col-md-12">
                 <label for="orderno">Contact NO:</label>
                 <input type="text" class="form-control" id="orderno" placeholder="" value="<?=($details)?$details["contact_no"]:''?>" readonly>
