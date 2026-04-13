@@ -94,12 +94,7 @@
                         </tr>
                         <?php
                             }
-                        } else {
-                        ?>
-                        <tr>
-                            <td colspan="7">NO RECORD FOUND!</td>
-                        </tr>
-                        <?php } ?>
+                        } ?>
                     </tbody>
                 </table>
             </div>
