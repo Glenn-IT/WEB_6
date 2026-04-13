@@ -36,74 +36,74 @@
 
 ### `libraries/`
 
-- [ ] `libraries/Helper.php`  
+- [x] `libraries/Helper.php`  
       _(Added Banner, Promo, About sidebar links)_
 
 ### `components/CustomerController/`
 
-- [ ] `components/CustomerController/CustomerController.php`  
+- [x] `components/CustomerController/CustomerController.php`  
       _(Biggest change — service type modal, checkout save, about page data, source() fix)_
-- [ ] `components/CustomerController/js/custom.js`  
+- [x] `components/CustomerController/js/custom.js`  
       _(Service type picker flow, applyServiceType() enable/disable fix)_
-- [ ] `components/CustomerController/views/about.php`  
+- [x] `components/CustomerController/views/about.php`  
       _(Who We Are section, team photo, extract fix, devImage path fix)_
-- [ ] `components/CustomerController/views/custom.php`  
+- [x] `components/CustomerController/views/custom.php`  
       _(Dynamic banners and promos on homepage)_
-- [ ] `components/CustomerController/views/place_bid_terms.php`  
+- [x] `components/CustomerController/views/place_bid_terms.php`  
       _(Booking wizard — service type fields, disabled inputs fix)_
-- [ ] `components/CustomerController/views/service_type_modal.php`  
+- [x] `components/CustomerController/views/service_type_modal.php`  
       _(NEW FILE — Walk-in / Home / Hotel picker modal)_
 
 ### `components/TherapistController/`
 
-- [ ] `components/TherapistController/TherapistController.php`  
+- [x] `components/TherapistController/TherapistController.php`  
       _(Photo/bio/position upload, team photo methods)_
-- [ ] `components/TherapistController/js/custom.js`  
+- [x] `components/TherapistController/js/custom.js`  
       _(DataTables update, team photo upload handler)_
-- [ ] `components/TherapistController/views/custom.php`  
+- [x] `components/TherapistController/views/custom.php`  
       _(Photo column in therapist table, team photo upload card)_
-- [ ] `components/TherapistController/views/modal_details.php`  
+- [x] `components/TherapistController/views/modal_details.php`  
       _(Photo/bio/position fields in add/edit form)_
 
 ### `components/TransactionBiddingController/`
 
-- [ ] `components/TransactionBiddingController/TransactionBiddingController.php`  
+- [x] `components/TransactionBiddingController/TransactionBiddingController.php`  
       _(SQL queries fixed — fetch service_type, billing_address, hotel fields from main_order)_
-- [ ] `components/TransactionBiddingController/js/custom.js`  
+- [x] `components/TransactionBiddingController/js/custom.js`  
       _(DataTables 8-column config)_
-- [ ] `components/TransactionBiddingController/views/custom.php`  
+- [x] `components/TransactionBiddingController/views/custom.php`  
       _(Service Type badge column added)_
-- [ ] `components/TransactionBiddingController/views/modal_details.php`  
+- [x] `components/TransactionBiddingController/views/modal_details.php`  
       _(Service type badge + smart address/hotel display in booking detail modal)_
 
 ### `components/TransactionOrderController/`
 
-- [ ] `components/TransactionOrderController/TransactionOrderController.php`  
+- [x] `components/TransactionOrderController/TransactionOrderController.php`  
       _(SQL SELECT updated to include service_type, hotel_name, hotel_room)_
-- [ ] `components/TransactionOrderController/js/custom.js`  
+- [x] `components/TransactionOrderController/js/custom.js`  
       _(DataTables 13-column config)_
-- [ ] `components/TransactionOrderController/views/custom.php`  
+- [x] `components/TransactionOrderController/views/custom.php`  
       _(Service Type badge column + Location/Address column)_
 
 ### `components/BannerController/` _(NEW — upload entire folder)_
 
-- [ ] `components/BannerController/BannerController.php`
-- [ ] `components/BannerController/js/custom.js`
-- [ ] `components/BannerController/views/custom.php`
-- [ ] `components/BannerController/views/modal_details.php`
+- [x] `components/BannerController/BannerController.php`
+- [x] `components/BannerController/js/custom.js`
+- [x] `components/BannerController/views/custom.php`
+- [x] `components/BannerController/views/modal_details.php`
 
 ### `components/PromoController/` _(NEW — upload entire folder)_
 
-- [ ] `components/PromoController/PromoController.php`
-- [ ] `components/PromoController/js/custom.js`
-- [ ] `components/PromoController/views/custom.php`
-- [ ] `components/PromoController/views/modal_details.php`
+- [x] `components/PromoController/PromoController.php`
+- [x] `components/PromoController/js/custom.js`
+- [x] `components/PromoController/views/custom.php`
+- [x] `components/PromoController/views/modal_details.php`
 
 ### `components/AboutController/` _(NEW — upload entire folder)_
 
-- [ ] `components/AboutController/AboutController.php`
-- [ ] `components/AboutController/js/custom.js`
-- [ ] `components/AboutController/views/custom.php`
+- [x] `components/AboutController/AboutController.php`
+- [x] `components/AboutController/js/custom.js`
+- [x] `components/AboutController/views/custom.php`
 
 ---
 
@@ -111,8 +111,8 @@
 
 > Only needed if you uploaded therapist photos or team photos on localhost.
 
-- [ ] `src/images/therapist/uploads/` _(all therapist profile photos)_
-- [ ] `src/images/therapist/team/` _(team/group photos)_
+- [x] `src/images/therapist/uploads/` _(all therapist profile photos)_
+- [x] `src/images/therapist/team/` _(team/group photos)_
 
 ---
 
