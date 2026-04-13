@@ -15,10 +15,16 @@ class TherapistController {
     public function index() {
         $data = [];
 
-        $data["list"] = $this->db->Select("select t.*, b.`name` as ser_type from therapist t 
-            left join brand b ON b.id = t.service_id
-            where t.deleted = 0", array() );
-        
+        $data["list"] = $this->db->Select("SELECT t.*, b.`name` AS ser_type FROM therapist t 
+            LEFT JOIN brand b ON b.id = t.service_id
+            WHERE t.deleted = 0 ORDER BY t.id ASC", array() );
+
+        // Current group / team photo
+        $data["team_photo"] = $this->db->Select(
+            "SELECT * FROM site_team_photo WHERE deleted = 0 AND is_active = 1 ORDER BY id DESC LIMIT 1", []
+        );
+        $data["team_photo"] = count($data["team_photo"]) > 0 ? $data["team_photo"][0] : null;
+
         return ["content" => loadView('components/'.$this->view.'/views/custom', $data)];
     }
     public function js(){
@@ -81,6 +87,19 @@ class TherapistController {
             }
         }
 
+        $folder   = 'src/images/therapist/uploads/';
+        $bio      = isset($bio)      ? trim($bio)      : '';
+        $position = isset($position) ? trim($position) : '';
+
+        // Handle photo upload
+        $photoPath = null;
+        if (isset($photo) && is_array($photo) && !empty($photo['name'][0])) {
+            $uploaded = $this->db->handleMultipleFileUpload($photo, $folder);
+            if (!empty($uploaded)) {
+                $photoPath = $uploaded[0];
+            }
+        }
+
         if(isset($id)) {
             //edit 
             // Check if combination of service_id and name already exists for other records (excluding current record)
@@ -102,8 +121,13 @@ class TherapistController {
                 }
             }
 
-            $this->db->Update("update therapist SET name = ?, service_id = ?  WHERE id = ? ",
-             array($name,  $service_id, $id  ));
+            if ($photoPath) {
+                $this->db->Update("UPDATE therapist SET name = ?, service_id = ?, bio = ?, position = ?, photo = ? WHERE id = ?",
+                    array($name, $service_id, $bio, $position, $photoPath, $id));
+            } else {
+                $this->db->Update("UPDATE therapist SET name = ?, service_id = ?, bio = ?, position = ? WHERE id = ?",
+                    array($name, $service_id, $bio, $position, $id));
+            }
   
             if ($isAjax) {
                 $res = [
@@ -139,8 +163,8 @@ class TherapistController {
                 }
             }
 
-            $this->db->Insert("INSERT INTO therapist (`name`,`service_id`) VALUES (?,?)", [
-                $name,$service_id
+            $this->db->Insert("INSERT INTO therapist (`name`, `service_id`, `bio`, `position`, `photo`) VALUES (?,?,?,?,?)", [
+                $name, $service_id, $bio, $position, $photoPath
             ]);
             
             if ($isAjax) {
@@ -159,6 +183,39 @@ class TherapistController {
             }
         }
         
+    }
+
+    /* -------------------------------------------------------
+     * uploadTeamPhoto – upload / replace the group team photo
+     * ------------------------------------------------------- */
+    public function uploadTeamPhoto() {
+        $data = getRequestAll();
+        extract($data);
+
+        $folder = 'src/images/therapist/team/';
+
+        if (!isset($team_photo) || !is_array($team_photo) || empty($team_photo['name'][0])) {
+            header('Location: index?type=warning&message=Please select a photo to upload!');
+            exit();
+        }
+
+        $uploaded = $this->db->handleMultipleFileUpload($team_photo, $folder);
+        if (empty($uploaded)) {
+            header('Location: index?type=warning&message=Photo upload failed!');
+            exit();
+        }
+
+        // Soft-delete previous team photos
+        $this->db->Update("UPDATE site_team_photo SET deleted = 1", []);
+
+        $caption = isset($caption) ? trim($caption) : 'Our Team';
+        $this->db->Insert(
+            "INSERT INTO site_team_photo (image_path, caption, is_active) VALUES (?, ?, 1)",
+            [$uploaded[0], $caption]
+        );
+
+        header('Location: index?type=success&message=Team photo updated successfully!');
+        exit();
     }
 
     public function delete(){
