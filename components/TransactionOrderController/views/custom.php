@@ -86,9 +86,6 @@
                                                         <?php
                                                     }
                                                     // CANCELLED and DECLINED appointments show no action buttons
-                                                        <?php
-                                                    }
-                                                 
                                                 }
                                                 ?>
 
