@@ -1,3 +1,16 @@
+<?php
+// Extract all variables returned by CustomerController::about()
+// They are passed through $custome (set in index() via $data["custome"])
+if (isset($custome) && is_array($custome)) {
+    extract($custome);
+}
+// Ensure defaults so the view never breaks
+if (!isset($about_sections))  $about_sections  = [];
+if (!isset($contact_info))    $contact_info    = [];
+if (!isset($therapists))      $therapists      = [];
+if (!isset($team_photo))      $team_photo      = null;
+if (!isset($developers))      $developers      = [];
+?>
 <main>
 
 
@@ -53,6 +66,124 @@
         </div>
       </div>
     </section>
+
+    <!-- ===== WHO WE ARE — Therapist Team Section ===== -->
+    <section class="who-we-are-section py-5">
+      <div class="container">
+
+        <!-- Section Header -->
+        <div class="row">
+          <div class="col-12 text-center mb-5">
+            <h2 class="section-title">Who We Are</h2>
+            <p class="fs-6 text-muted">Meet our skilled and certified team of therapists dedicated to your wellness</p>
+            <div class="title-underline mx-auto" style="width:60px;height:3px;background:linear-gradient(135deg,#c8956c,#e8b89a);border-radius:2px;margin-top:0.75rem;"></div>
+          </div>
+        </div>
+
+        <?php if (!empty($therapists)): ?>
+
+          <!-- Group / Team Photo -->
+          <?php if (!empty($team_photo)): ?>
+          <div class="row justify-content-center mb-5">
+            <div class="col-lg-8 text-center">
+              <img src="<?= $_ENV['URL_HOST'] ?><?= htmlspecialchars($team_photo['image_path']) ?>"
+                   class="img-fluid rounded shadow"
+                   style="max-height:380px;width:100%;object-fit:cover;"
+                   alt="<?= htmlspecialchars($team_photo['caption'] ?? 'Our Team') ?>">
+              <?php if (!empty($team_photo['caption'])): ?>
+              <p class="text-muted mt-3 fst-italic"><?= htmlspecialchars($team_photo['caption']) ?></p>
+              <?php endif; ?>
+            </div>
+          </div>
+          <?php endif; ?>
+
+          <!-- Individual Therapist Cards -->
+          <div class="row justify-content-center">
+            <?php foreach ($therapists as $therapist): ?>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+              <div class="therapist-card text-center h-100">
+                <div class="therapist-photo-wrap mx-auto mb-3">
+                  <?php if (!empty($therapist['photo'])): ?>
+                    <img src="<?= $_ENV['URL_HOST'] ?><?= htmlspecialchars($therapist['photo']) ?>"
+                         class="therapist-photo"
+                         alt="<?= htmlspecialchars($therapist['name']) ?>">
+                  <?php else: ?>
+                    <div class="therapist-photo-placeholder">
+                      <i class="fa fa-user"></i>
+                    </div>
+                  <?php endif; ?>
+                </div>
+                <h5 class="therapist-name mb-1"><?= htmlspecialchars($therapist['name']) ?></h5>
+                <?php if (!empty($therapist['position'])): ?>
+                  <p class="therapist-position mb-1"><?= htmlspecialchars($therapist['position']) ?></p>
+                <?php endif; ?>
+                <?php if (!empty($therapist['ser_type'])): ?>
+                  <span class="therapist-badge"><?= htmlspecialchars($therapist['ser_type']) ?></span>
+                <?php endif; ?>
+                <?php if (!empty($therapist['bio'])): ?>
+                  <p class="therapist-bio mt-2"><?= htmlspecialchars($therapist['bio']) ?></p>
+                <?php endif; ?>
+              </div>
+            </div>
+            <?php endforeach; ?>
+          </div>
+
+        <?php else: ?>
+          <!-- No therapists yet -->
+          <div class="row justify-content-center">
+            <div class="col-md-6 text-center text-muted py-5">
+              <i class="fa fa-users fa-3x mb-3" style="color:#c8956c;opacity:.6;"></i>
+              <p>Our team profiles will be available soon. Stay tuned!</p>
+            </div>
+          </div>
+        <?php endif; ?>
+
+      </div>
+    </section>
+
+    <!-- "Who We Are" section styles -->
+    <style>
+      .who-we-are-section { background: #fff; }
+      .therapist-card {
+        background: #fff;
+        border-radius: 16px;
+        padding: 1.5rem 1rem;
+        box-shadow: 0 4px 18px rgba(0,0,0,.07);
+        transition: transform .3s ease, box-shadow .3s ease;
+      }
+      .therapist-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 10px 28px rgba(0,0,0,.13);
+      }
+      .therapist-photo-wrap { width:110px;height:110px; }
+      .therapist-photo {
+        width:110px;height:110px;
+        border-radius:50%;
+        object-fit:cover;
+        border:3px solid #c8956c;
+      }
+      .therapist-photo-placeholder {
+        width:110px;height:110px;
+        border-radius:50%;
+        background:#f5e6df;
+        border:3px solid #c8956c;
+        display:flex;align-items:center;justify-content:center;
+        font-size:2.5rem;color:#c8956c;
+      }
+      .therapist-name { font-weight:700;color:#2c3e50;font-size:1rem; }
+      .therapist-position { color:#c8956c;font-size:.85rem;font-weight:600; }
+      .therapist-badge {
+        display:inline-block;
+        background:#f5e6df;
+        color:#c8956c;
+        font-size:.75rem;
+        font-weight:600;
+        padding:.2rem .7rem;
+        border-radius:20px;
+        margin-bottom:.25rem;
+      }
+      .therapist-bio { font-size:.82rem;color:#666;line-height:1.5; }
+    </style>
 
     <!-- Contact Section -->
     <section class="contact-section bg-light py-5">
