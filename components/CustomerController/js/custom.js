@@ -1008,18 +1008,21 @@ $(document).on("click", "#btn-proceed-service-type", function () {
 function applyServiceType(type) {
   $("#service_type_field").val(type);
 
-  // Hide all optional blocks first
+  // Hide all optional blocks and DISABLE their inputs so they are not submitted
   $("#home-service-fields").hide();
   $("#hotel-service-fields").hide();
-  // Remove required from all optional inputs
-  $("#billing_address, #hotel_name, #hotel_address, #hotel_room").removeAttr("required");
+  $("#billing_address, #hotel_name, #hotel_address, #hotel_room")
+    .prop("disabled", true)
+    .removeAttr("required");
 
   if (type === "home") {
     $("#home-service-fields").show();
-    $("#billing_address").attr("required", "required");
+    $("#billing_address").prop("disabled", false).attr("required", "required");
   } else if (type === "hotel") {
     $("#hotel-service-fields").show();
-    $("#hotel_name, #hotel_address, #hotel_room").attr("required", "required");
+    $("#hotel_name, #hotel_address, #hotel_room")
+      .prop("disabled", false)
+      .attr("required", "required");
   }
 
   // Update the confirmation step label

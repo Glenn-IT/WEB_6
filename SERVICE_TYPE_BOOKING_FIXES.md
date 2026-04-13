@@ -1,109 +1,76 @@
 # Service Type & Address Fixes — Booking List (Admin)
 
-**Date:** April 13, 2026  
+**Last Updated:** April 14, 2026
+
+---
+
+## Fix 1 — April 13, 2026: Admin Booking List not showing service type / address
+
 **Issue:** Admin Booking List (Booking List page) was not showing:
 1. The service type (Walk-in / Home Service / Hotel Service) in the list table
 2. The service type badge in the VIEW modal (Booking Details)
 3. The correct address/hotel info in the modal's "Client Information" section (always blank)
 
----
-
-## Root Cause
-
+### Root Cause
 Both `index()` and `source()` queries in `TransactionBiddingController` were fetching `u.billing_address`
 from the **users** table — which is the user's profile address, not the booking address.
 
 The actual booking fields (`service_type`, `billing_address`, `hotel_name`, `hotel_room`) are stored
-in the **`main_order`** table (added by the `migration_service_type.sql` migration), but they were
-never being selected or displayed.
+in the **`main_order`** table, but were never being selected or displayed.
+
+### Files Changed
+- `components/TransactionBiddingController/TransactionBiddingController.php` — SQL queries updated to read `o.service_type`, `o.billing_address`, `o.hotel_name`, `o.hotel_room` from `main_order`
+- `components/TransactionBiddingController/views/custom.php` — Added Service Type colored badge column
+- `components/TransactionBiddingController/views/modal_details.php` — Added Service Type badge and smart address/hotel display
+- `components/TransactionBiddingController/js/custom.js` — Updated DataTables for 8-column table
 
 ---
 
-## Files Changed
+## Fix 2 — April 14, 2026: billing_address not saving to database
 
-### 1. `components/TransactionBiddingController/TransactionBiddingController.php`
+**Issue:** When a customer selects **Home Service** and enters their address, it was NOT being saved to the database (`billing_address` column in `main_order` always stayed empty).
 
-**Both `index()` and `source()` SQL queries updated** — changed `u.billing_address` to the correct
-fields from `main_order`:
+### Root Cause — 3 bugs found
 
-```sql
--- BEFORE (wrong — reads user profile address, always blank for most users)
-u.billing_address
+#### Bug 1: Duplicate `name="billing_address"` on two inputs
+Both the Home Address field AND the Hotel Address field had `name="billing_address"`:
+```html
+<!-- Home field -->
+<input name="billing_address" id="billing_address"> 
 
--- AFTER (correct — reads booking-level fields from main_order)
-o.service_type,
-o.billing_address,
-o.hotel_name,
-o.hotel_room,
+<!-- Hotel field — WRONG, same name! -->
+<input name="billing_address" id="hotel_address">
 ```
+When the form submitted, the browser sent the first match — which was the Home field. If the Hotel section was selected, both fields existed in the DOM and the empty Home field won.
 
----
+#### Bug 2: Hidden fields were still submitted
+The Home/Hotel sections were hidden with `display:none` but inputs still had `name` attributes, so they were included in the form POST even when invisible — sending empty strings.
 
-### 2. `components/TransactionBiddingController/views/custom.php`
+#### Bug 3: Hotel address had no unique field name
+The hotel address didn't have its own field name, so PHP's `checkout()` couldn't distinguish "hotel address" from "home address".
 
-**Booking List table:**
-- Added new **"Service Type"** column (between Therapist Name and Date & Time)
-- Shows colored badge:
-  - 🟢 **Walk-in** (green)
-  - 🔵 **Home Service** (blue)
-  - 🟣 **Hotel Service** (purple)
-- Fixed empty-state row to use a single `colspan="8"` instead of 7 empty `<td>` tags
+### Fixes Applied
 
----
+**`components/CustomerController/views/place_bid_terms.php`**
+- Added `disabled` attribute to all address/hotel inputs by default (disabled fields are NOT submitted)
+- Renamed hotel address field from `name="billing_address"` → `name="hotel_address"` (unique name)
 
-### 3. `components/TransactionBiddingController/views/modal_details.php`
+**`components/CustomerController/js/custom.js` — `applyServiceType()` function**
+- Changed show/hide logic to also **enable/disable** inputs:
+  - Walk-in → all fields disabled (not submitted)
+  - Home → only `#billing_address` enabled + required
+  - Hotel → only `#hotel_name`, `#hotel_address`, `#hotel_room` enabled + required
 
-**Booking Details section (top half of modal):**
-- Added **Service Type** badge display after the Time field
-- Conditionally shows address/hotel info right in the booking details block:
-  - **Home Service** → shows "Home Address" textarea
-  - **Hotel Service** → shows "Hotel Name" + "Room No." side by side
-  - **Walk-in** → nothing extra shown (handled in Client Info section)
-
-**Client Information section (bottom of modal):**
-- Replaced the static blank "Address" input with smart conditional display:
-  - **Home Service** → shows `Home Address` textarea with the `billing_address` value
-  - **Hotel Service** → shows `Hotel Name` + `Room No.` fields
-  - **Walk-in** → shows a read-only input with text "In-store (Walk-in)"
-
----
-
-### 4. `components/TransactionBiddingController/js/custom.js`
-
-- Added `language: { emptyTable: "NO RECORD FOUND!" }` to DataTables config
-- Added `columnDefs` to disable ordering on Service Type (col 4) and Action (col 7) columns
-
----
-
-## How It Looks After Fix
-
-### Booking List Table
-| ID | Order No. | Customer Name | Therapist | **Service Type** | Date & Time | Status | Action |
-|----|-----------|---------------|-----------|------------------|-------------|--------|--------|
-| 69 | 777656 | Glenard P. | Any Professional | 🟣 Hotel Service | 2026-04-14 10:30 AM | PROCESSED | VIEW / COMPLETE / DECLINE |
-
-### VIEW Modal — Booking Details
+**`components/CustomerController/CustomerController.php` — `checkout()` method**
+- Added logic to map `hotel_address` → `billing_address` for hotel service type:
+```php
+if ($svc_type === 'hotel') {
+    $final_billing_address = isset($hotel_address) ? $hotel_address : '';
+} else {
+    $final_billing_address = isset($billing_address) ? $billing_address : '';
+}
 ```
-Status:         PROCESSED
-Order No:       777656
-Date Scheduled: 2026-04-14
-Time:           10:30 AM
-Service Type:   [🟣 Hotel Service]
-Hotel Name:     Grand Hyatt
-Room No.:       305
-Therapist Name: Any Professional
-Number of Client: 2
-```
-
-### VIEW Modal — Client Information
-```
-Name:       Glenard Pagurayan
-Hotel Name: Grand Hyatt          Room No.: 305
-Contact No: 09157609077
-Gender:     MALE
-```
-*(For Walk-in: Address shows "In-store (Walk-in)")*
-*(For Home Service: Address shows the home address entered during booking)*
+- Email notification also updated to use `$final_billing_address` and show Hotel Address line for hotel bookings
 
 ---
 

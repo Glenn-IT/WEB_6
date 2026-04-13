@@ -890,6 +890,16 @@ class CustomerController {
         // }
         // ===== END DOWNPAYMENT FEATURE =====
         
+        $svc_type = isset($service_type) ? $service_type : 'walk-in';
+
+        // For hotel service, billing_address comes from hotel_address field
+        // For home service, billing_address comes from billing_address field
+        if ($svc_type === 'hotel') {
+            $final_billing_address = isset($hotel_address) ? $hotel_address : (isset($billing_address) ? $billing_address : '');
+        } else {
+            $final_billing_address = isset($billing_address) ? $billing_address : '';
+        }
+
         $insert = [
             "user_id"         => $_SESSION["user_id"],
             "date"            => $date,
@@ -897,10 +907,10 @@ class CustomerController {
             'time'            => $time,
             'therapist_id'    => $therapist_id,
             'no_ofhead'       => $no_ofhead,
-            'service_type'    => isset($service_type)  ? $service_type  : 'walk-in',
-            'billing_address' => isset($billing_address) ? $billing_address : '',
-            'hotel_name'      => isset($hotel_name)    ? $hotel_name    : '',
-            'hotel_room'      => isset($hotel_room)    ? $hotel_room    : '',
+            'service_type'    => $svc_type,
+            'billing_address' => $final_billing_address,
+            'hotel_name'      => isset($hotel_name) ? $hotel_name : '',
+            'hotel_room'      => isset($hotel_room) ? $hotel_room : '',
         ];
 
         $this->db->insertRequestBatchRquest($insert,'main_order');
@@ -1020,24 +1030,27 @@ class CustomerController {
                             <h3 style='color: #4CAF50; border-bottom: 2px solid #4CAF50; padding-bottom: 5px; margin-top: 20px;'>Service Information</h3>
                             <div class='info-row'>
                                 <span class='info-label'>Service Type:</span>
-                                <span class='info-value'>" . (function() use ($insert) {
-                                    $stype = $insert['service_type'] ?? 'walk-in';
+                                <span class='info-value'>" . (function() use ($svc_type) {
                                     $labels = ['walk-in' => 'Walk-in', 'home' => 'Home Service', 'hotel' => 'Hotel Service'];
                                     $colors = ['walk-in' => '#28a745', 'home' => '#007bff', 'hotel' => '#6f42c1'];
-                                    $label = $labels[$stype] ?? ucfirst($stype);
-                                    $color = $colors[$stype] ?? '#6c757d';
+                                    $label = $labels[$svc_type] ?? ucfirst($svc_type);
+                                    $color = $colors[$svc_type] ?? '#6c757d';
                                     return "<span style='background:{$color};color:#fff;padding:2px 8px;border-radius:4px;font-size:13px;'>{$label}</span>";
                                 })() . "</span>
                             </div>" .
-                            ((!empty($insert['billing_address']) && $insert['service_type'] === 'home') ? "
+                            ((!empty($final_billing_address) && $svc_type === 'home') ? "
                             <div class='info-row'>
                                 <span class='info-label'>Home Address:</span>
-                                <span class='info-value'>" . htmlspecialchars($insert['billing_address']) . "</span>
+                                <span class='info-value'>" . htmlspecialchars($final_billing_address) . "</span>
                             </div>" : "") .
-                            (($insert['service_type'] === 'hotel') ? "
+                            (($svc_type === 'hotel') ? "
                             <div class='info-row'>
                                 <span class='info-label'>Hotel Name:</span>
                                 <span class='info-value'>" . htmlspecialchars($insert['hotel_name'] ?? 'N/A') . "</span>
+                            </div>
+                            <div class='info-row'>
+                                <span class='info-label'>Hotel Address:</span>
+                                <span class='info-value'>" . htmlspecialchars($final_billing_address ?: 'N/A') . "</span>
                             </div>
                             <div class='info-row'>
                                 <span class='info-label'>Room No.:</span>

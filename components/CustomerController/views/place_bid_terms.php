@@ -393,7 +393,7 @@
         </div>
         <div class="form-floating my-3">
           <input type="text" class="form-control" id="billing_address" name="billing_address"
-                 placeholder="Complete Home Address">
+                 placeholder="Complete Home Address" disabled>
           <label for="billing_address">Complete Home Address <span class="text-danger">*</span></label>
         </div>
       </div>
@@ -408,21 +408,21 @@
           <div class="col-md-12">
             <div class="form-floating my-3">
               <input type="text" class="form-control" id="hotel_name" name="hotel_name"
-                     placeholder="Hotel Name">
+                     placeholder="Hotel Name" disabled>
               <label for="hotel_name">Hotel Name <span class="text-danger">*</span></label>
             </div>
           </div>
           <div class="col-md-8">
             <div class="form-floating my-3">
-              <input type="text" class="form-control" id="hotel_address" name="billing_address"
-                     placeholder="Hotel Address">
+              <input type="text" class="form-control" id="hotel_address" name="hotel_address"
+                     placeholder="Hotel Address" disabled>
               <label for="hotel_address">Hotel Address <span class="text-danger">*</span></label>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-floating my-3">
               <input type="text" class="form-control" id="hotel_room" name="hotel_room"
-                     placeholder="Room No.">
+                     placeholder="Room No." disabled>
               <label for="hotel_room">Room Number <span class="text-danger">*</span></label>
             </div>
           </div>
