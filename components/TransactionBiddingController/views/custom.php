@@ -22,6 +22,7 @@
                             <th>Order No.</th>
                             <th>Customer Name</th>
                             <th>Therapist Nam</th>
+                            <th>Service Type</th>
                             <th>Date & Time Schedule</th>
                             <th>Status</th>
                             <th>Action</th>
@@ -45,6 +46,17 @@
                                             <td><?=$value["order_no"]?></td>
                                             <td><?=$value["full_name"]?></td>
                                             <td><?=$value["therapistname"]?></td>
+                                            <td>
+                                                <?php
+                                                    $stype = !empty($value["service_type"]) ? $value["service_type"] : 'walk-in';
+                                                    $stype_badges = [
+                                                        'walk-in' => '<span style="background:#28a745;color:#fff;padding:3px 9px;border-radius:4px;font-size:12px;">Walk-in</span>',
+                                                        'home'    => '<span style="background:#007bff;color:#fff;padding:3px 9px;border-radius:4px;font-size:12px;">Home Service</span>',
+                                                        'hotel'   => '<span style="background:#6f42c1;color:#fff;padding:3px 9px;border-radius:4px;font-size:12px;">Hotel Service</span>',
+                                                    ];
+                                                    echo isset($stype_badges[$stype]) ? $stype_badges[$stype] : '<span style="background:#6c757d;color:#fff;padding:3px 9px;border-radius:4px;font-size:12px;">'.htmlspecialchars($stype).'</span>';
+                                                ?>
+                                            </td>
                                             <td><?=$value["date"].' '.$value["format_time"]?></td>
                                             <td><?=$status[$value["val_status"]]?></td>
                                             <td>
@@ -75,14 +87,7 @@
                                 } else {
                                     ?>
                                     <tr>
-                                        <td > NO RECORD FOUND!</td>
-                                        <td > </td>
-                                        <td > </td>
-                                        <td > </td>
-                                        <td > </td>
-                                        <td > </td>
-                                        <td > </td>
-
+                                        <td colspan="8"> NO RECORD FOUND!</td>
                                     </tr>
 
                                     <?php
