@@ -163,6 +163,20 @@ class CustomerController {
         $data["view"] = isset($_SESSION["user_id"]) && (isset($view) && $view !='' && (method_exists($this, $view))) ? $this->{$view}() : [];
 
         $data["custome"] = (method_exists($this, $page)) ? $this->{$page}() : [];
+
+        // Load dynamic banners & promos (used on the home page)
+        $data["banners"] = $this->db->Select(
+            "SELECT * FROM site_banners WHERE deleted = 0 AND is_active = 1 ORDER BY sort_order ASC",
+            []
+        );
+        $data["promos"] = $this->db->Select(
+            "SELECT p.*, i.item_id AS linked_item_id
+             FROM site_promos p
+             LEFT JOIN items i ON i.item_id = p.link_service_id
+             WHERE p.deleted = 0 AND p.is_active = 1
+             ORDER BY p.promo_id ASC",
+            []
+        );
         
         return ["content" => loadView('components/'.$this->view.'/views/'.$page, $data)];
     }
@@ -176,13 +190,22 @@ class CustomerController {
     }
 
     public function about() {
-        // About page data
+        // About page data – loaded from database
         $res = [];
+        $rows = $this->db->Select("SELECT section_key, content FROM site_about ORDER BY about_id ASC", []);
+        $sections = [];
+        foreach ($rows as $row) {
+            $sections[$row['section_key']] = $row['content'];
+        }
+
         $res["contact_info"] = [
-            "address" => "JPF7+M72, Diversion Road, Tuguegarao City, Cagayan",
-            "phone" => "09356724821",
-            "email" => "touchandcaremassageandspa@gmail.com"
+            "address" => isset($sections['contact_address']) ? $sections['contact_address'] : 'JPF7+M72, Diversion Road, Tuguegarao City, Cagayan',
+            "phone"   => isset($sections['contact_phone'])   ? $sections['contact_phone']   : '09356724821',
+            "email"   => isset($sections['contact_email'])   ? $sections['contact_email']   : 'touchandcaremassageandspa@gmail.com',
+            "map_embed" => isset($sections['map_embed'])     ? $sections['map_embed']       : '',
         ];
+
+        $res["about_sections"] = $sections;
         
         $res["developers"] = [
             [
